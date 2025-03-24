@@ -61,7 +61,7 @@ public class UserService {
         }
 
         // JWT 토큰 발급
-        String token = jwtUtil.generateToken(user.getUsername());
+        String token = jwtUtil.generateToken(user.getEmail());
 
         return ApiResponse.success(token);
     }
