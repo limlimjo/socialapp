@@ -22,7 +22,10 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.csrf(csrf -> csrf.disable()) // csrf 비활성화 (REST API에서는 주로 비활성화)
                 .authorizeHttpRequests((authorize) -> authorize
-                        .requestMatchers("/api/users/signup", "/api/users/login").permitAll()
+                        .requestMatchers(
+                                "/api/users/signup", "/api/users/login",
+                                "/swagger-ui/**", "/v3/api-docs/**"
+                        ).permitAll()
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class) // jwt 필터 등록
