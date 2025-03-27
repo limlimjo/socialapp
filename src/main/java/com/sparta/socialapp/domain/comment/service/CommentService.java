@@ -71,11 +71,11 @@ public class CommentService {
 
         List<CommentResponseDto> commentList = commentRepository.findByBoardId(boardId).stream()
                 .map(comment -> CommentResponseDto.builder()
-                        .id(board.getId())
-                        .userId(board.getUser().getId())
-                        .content(board.getContent())
-                        .createdAt(board.getCreatedAt())
-                        .updatedAt(board.getUpdatedAt())
+                        .id(comment.getId())
+                        .userId(comment.getUser().getId())
+                        .content(comment.getContent())
+                        .createdAt(comment.getCreatedAt())
+                        .updatedAt(comment.getUpdatedAt())
                         .build())
                 .collect(Collectors.toList());
 
