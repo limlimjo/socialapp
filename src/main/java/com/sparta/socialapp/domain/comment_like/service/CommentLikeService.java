@@ -5,6 +5,7 @@ import com.sparta.socialapp.domain.comment.entity.Comment;
 import com.sparta.socialapp.domain.comment.repository.CommentRepository;
 import com.sparta.socialapp.domain.comment_like.entity.CommentLike;
 import com.sparta.socialapp.domain.comment_like.repository.CommentLikeRepository;
+import com.sparta.socialapp.domain.notification.service.NotificationService;
 import com.sparta.socialapp.domain.user.entity.User;
 import com.sparta.socialapp.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ public class CommentLikeService {
     private final CommentLikeRepository commentLikeRepository;
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
+    private final NotificationService notificationService;
 
     // 댓글 좋아요/좋아요 취소
     @Transactional
@@ -38,6 +40,9 @@ public class CommentLikeService {
            } else {
                like.setLikeStatus("LIKED");
                like.setUpdatedAt(LocalDateTime.now());
+               commentLikeRepository.save(like);
+               // 알람 저장
+               notificationService.createCommentLikeNotification(commentId, userId);
                return ApiResponse.success("좋아요가 추가되었습니다.");
            }
 
@@ -54,6 +59,8 @@ public class CommentLikeService {
                     .build();
 
             commentLikeRepository.save(newLike);
+            // 알람 저장
+            notificationService.createCommentLikeNotification(commentId, userId);
             return ApiResponse.success("좋아요가 추가되었습니다.");
         }
     }

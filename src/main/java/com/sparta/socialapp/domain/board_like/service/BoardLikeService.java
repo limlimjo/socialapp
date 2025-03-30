@@ -5,6 +5,7 @@ import com.sparta.socialapp.domain.board.entity.Board;
 import com.sparta.socialapp.domain.board.repository.BoardRepository;
 import com.sparta.socialapp.domain.board_like.entity.BoardLike;
 import com.sparta.socialapp.domain.board_like.repository.BoardLikeRepository;
+import com.sparta.socialapp.domain.notification.service.NotificationService;
 import com.sparta.socialapp.domain.user.entity.User;
 import com.sparta.socialapp.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -23,6 +23,7 @@ public class BoardLikeService {
     private final BoardLikeRepository boardLikeRepository;
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
+    private final NotificationService notificationService;
 
     // 게시글 좋아요/좋아요 취소
     @Transactional
@@ -40,6 +41,8 @@ public class BoardLikeService {
                 like.setLikeStatus("LIKED");
                 like.setUpdatedAt(LocalDateTime.now());
                 boardLikeRepository.save(like);
+                // 알람 저장
+                notificationService.createBoardLikeNotification(boardId, userId);
                 return ApiResponse.success("좋아요가 추가되었습니다.");
             }
 
@@ -56,6 +59,8 @@ public class BoardLikeService {
                     .build();
 
             boardLikeRepository.save(newLike);
+            // 알람 저장
+            notificationService.createBoardLikeNotification(boardId, userId);
             return ApiResponse.success("좋아요가 추가되었습니다.");
         }
     }

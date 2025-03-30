@@ -1,5 +1,7 @@
 package com.sparta.socialapp.domain.notification.entity;
 
+import com.sparta.socialapp.domain.board.entity.Board;
+import com.sparta.socialapp.domain.comment.entity.Comment;
 import com.sparta.socialapp.domain.user.entity.User;
 import jakarta.persistence.*;
 import lombok.*;
@@ -33,6 +35,17 @@ public class Notification {
     @Enumerated(EnumType.STRING)
     @Column(name = "event_type", nullable = false)
     NotiEventType eventType;
+
+    @Column(nullable = false, length = 500)
+    String content;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "board_id")
+    Board board;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "comment_id")
+    Comment comment;
 
     @Column(name = "is_read", nullable = false)
     Boolean isRead = false;
