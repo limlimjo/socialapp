@@ -2,7 +2,7 @@ CREATE TABLE notifications (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     recipient_id BIGINT NOT NULL,
     sender_id BIGINT NOT NULL,
-    event_tye ENUM('BOARD_COMMENT_CREATED', 'BOARD_LIKED', 'COMMENT_LIKED') NOT NULL,
+    event_type ENUM('BOARD_COMMENT_CREATED', 'BOARD_LIKED', 'COMMENT_LIKED') NOT NULL,
     content VARCHAR(500) NOT NULL,
     board_id BIGINT,
     comment_id BIGINT,

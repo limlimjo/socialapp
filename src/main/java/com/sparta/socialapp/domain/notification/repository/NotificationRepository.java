@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
 
-    // 수신자의 읽음 확인
+    // 수신자의 읽지 않은 알람 조회
     List<Notification> findByRecipientAndIsReadFalse(User recipient);
 }
