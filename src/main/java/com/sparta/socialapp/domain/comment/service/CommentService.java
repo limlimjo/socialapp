@@ -1,7 +1,7 @@
 package com.sparta.socialapp.domain.comment.service;
 
 import com.sparta.socialapp.common.api.ApiResponse;
-import com.sparta.socialapp.domain.board.dto.BoardResponseDto;
+import com.sparta.socialapp.common.logger.service.EventLogService;
 import com.sparta.socialapp.domain.board.entity.Board;
 import com.sparta.socialapp.domain.board.repository.BoardRepository;
 import com.sparta.socialapp.domain.comment.dto.CommentRequestDto;
@@ -11,6 +11,7 @@ import com.sparta.socialapp.domain.comment.repository.CommentRepository;
 import com.sparta.socialapp.domain.notification.service.NotificationService;
 import com.sparta.socialapp.domain.user.entity.User;
 import com.sparta.socialapp.domain.user.repository.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -30,6 +31,7 @@ public class CommentService {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
     private final NotificationService notificationService;
+    private final EventLogService eventLogService;
 
     // 댓글 등록
     @Transactional
@@ -70,7 +72,7 @@ public class CommentService {
     }
 
     // 특정 게시글의 댓글 조회
-    public ResponseEntity<ApiResponse<List<CommentResponseDto>>> getCommentsByBoardId(Long boardId) {
+    public ResponseEntity<ApiResponse<List<CommentResponseDto>>> getCommentsByBoardId(Long boardId, HttpServletRequest request) {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
 
@@ -83,6 +85,9 @@ public class CommentService {
                         .updatedAt(comment.getUpdatedAt())
                         .build())
                 .collect(Collectors.toList());
+
+        // click event log
+        eventLogService.logClickBoardComment(board, commentList, request);
 
         return ApiResponse.success(commentList);
     }
@@ -134,7 +139,4 @@ public class CommentService {
         commentRepository.deleteById(id);
         return ApiResponse.success("댓글이 삭제되었습니다.");
     }
-
-
-
 }

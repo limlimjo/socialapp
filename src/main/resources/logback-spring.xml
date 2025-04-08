@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+
+    <!-- click event 로그 -->
+    <appender name="CLICK_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/user_click.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/user_click-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <objectMapper>
+                <!-- JavaTimeModule 등록 -->
+                <module class="com.fasterxml.jackson.datatype.jsr310.JavaTimeModule" />
+                <!-- 날짜를 타임스탬프가 아닌 ISO-8601 형식으로 직렬화 -->
+                <feature>WRITE_DATES_AS_TIMESTAMPS</feature>
+                <featureValue>false</featureValue>
+            </objectMapper>
+        </encoder>
+    </appender>
+
+    <!-- wish event 로그 -->
+    <appender name="WISH_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>logs/user_wish.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>logs/user_wish-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+        </rollingPolicy>
+        <encoder class="net.logstash.logback.encoder.LogstashEncoder">
+            <objectMapper>
+                <!-- JavaTimeModule 등록 -->
+                <module class="com.fasterxml.jackson.datatype.jsr310.JavaTimeModule" />
+                <!-- 날짜를 타임스탬프가 아닌 ISO-8601 형식으로 직렬화 -->
+                <feature>WRITE_DATES_AS_TIMESTAMPS</feature>
+                <featureValue>false</featureValue>
+            </objectMapper>
+        </encoder>
+    </appender>
+
+    <!-- alarm event 로그 -->
+<!--    <appender name="ALARM_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+<!--        <file>logs/user_alarm.log</file>-->
+<!--        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+<!--            <fileNamePattern>logs/user_alarm-%d{yyyy-MM-dd}.log</fileNamePattern>-->
+<!--            <maxHistory>30</maxHistory>-->
+<!--        </rollingPolicy>-->
+<!--        <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>-->
+<!--    </appender>-->
+
+    <!-- api access 로그 -->
+<!--    <appender name="ACCESS_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
+<!--        <file>logs/user_wish.log</file>-->
+<!--        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
+<!--            <fileNamePattern>logs/api_access-%d{yyyy-MM-dd}.log</fileNamePattern>-->
+<!--            <maxHistory>30</maxHistory>-->
+<!--        </rollingPolicy>-->
+<!--        <encoder class="net.logstash.logback.encoder.LogstashEncoder"/>-->
+<!--    </appender>-->
+
+    <!-- click event 로그 -->
+    <logger name="com.sparta.socialapp.log.click" level="INFO" additivity="false">
+        <appender-ref ref="CLICK_LOG"/>
+    </logger>
+
+    <!-- wish event 로그 -->
+    <logger name="com.sparta.socialapp.log.wish" level="INFO" additivity="false">
+        <appender-ref ref="WISH_LOG"/>
+    </logger>
+
+    <!-- alarm event 로그 -->
+<!--    <logger name="com.sparta.socialapp.log.alarm" level="INFO" additivity="false">-->
+<!--        <appender-ref ref="ALARM_LOG"/>-->
+<!--    </logger>-->
+
+    <!-- api access 로그 -->
+<!--    <logger name="com.sparta.socialapp.log.access" level="INFO" additivity="false">-->
+<!--        <appender-ref ref="ACCESS_LOG"/>-->
+<!--    </logger>-->
+
+    <root level="INFO">
+        <appender-ref ref="ACCESS_LOG"/>
+    </root>
+
+</configuration>

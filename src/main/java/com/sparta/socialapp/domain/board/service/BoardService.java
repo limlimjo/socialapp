@@ -1,14 +1,16 @@
 package com.sparta.socialapp.domain.board.service;
 
 import com.sparta.socialapp.common.api.ApiResponse;
+
+import com.sparta.socialapp.common.logger.service.EventLogService;
 import com.sparta.socialapp.domain.board.dto.BoardRequestDto;
 import com.sparta.socialapp.domain.board.dto.BoardResponseDto;
 import com.sparta.socialapp.domain.board.entity.Board;
 import com.sparta.socialapp.domain.board.repository.BoardRepository;
 import com.sparta.socialapp.domain.user.entity.User;
 import com.sparta.socialapp.domain.user.repository.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -25,6 +27,7 @@ public class BoardService {
 
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
+    private final EventLogService eventLogService;
 
     // 게시글 작성
     @Transactional
@@ -74,7 +77,7 @@ public class BoardService {
     }
 
     // 특정 게시글 조회
-    public ResponseEntity<ApiResponse<BoardResponseDto>> getBoardById(Long id) {
+    public ResponseEntity<ApiResponse<BoardResponseDto>> getBoardById(Long id, HttpServletRequest request) {
         Board board = boardRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("게시글을 찾을 수 없습니다."));
 
@@ -86,6 +89,9 @@ public class BoardService {
                 .createdAt(board.getCreatedAt())
                 .updatedAt(board.getUpdatedAt())
                 .build();
+
+        // click event log
+        eventLogService.logClickBoardDetailPage(board, request);
 
         return ApiResponse.success(responseDto);
     }

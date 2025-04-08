@@ -4,6 +4,7 @@ import com.sparta.socialapp.common.api.ApiResponse;
 import com.sparta.socialapp.domain.comment.dto.CommentRequestDto;
 import com.sparta.socialapp.domain.comment.dto.CommentResponseDto;
 import com.sparta.socialapp.domain.comment.service.CommentService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,8 +26,8 @@ public class CommentController {
 
     // 특정 게시글의 댓글 조회
     @GetMapping("/board/{boardId}")
-    public ResponseEntity<ApiResponse<List<CommentResponseDto>>> getCommentsByBoardId(@PathVariable Long boardId) {
-        return commentService.getCommentsByBoardId(boardId);
+    public ResponseEntity<ApiResponse<List<CommentResponseDto>>> getCommentsByBoardId(@PathVariable Long boardId, HttpServletRequest request) {
+        return commentService.getCommentsByBoardId(boardId, request);
     }
 
     // 댓글 수정

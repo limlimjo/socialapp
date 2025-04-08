@@ -1,10 +1,11 @@
 package com.sparta.socialapp.domain.board.controller;
 
 import com.sparta.socialapp.common.api.ApiResponse;
-import com.sparta.socialapp.common.config.JwtUtil;
+import com.sparta.socialapp.common.logger.EventLogFactory;
 import com.sparta.socialapp.domain.board.dto.BoardRequestDto;
 import com.sparta.socialapp.domain.board.dto.BoardResponseDto;
 import com.sparta.socialapp.domain.board.service.BoardService;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,8 +33,9 @@ public class BoardController {
 
     // 특정 게시글 조회
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<BoardResponseDto>> getBoardById(@PathVariable Long id) {
-        return boardService.getBoardById(id);
+    public ResponseEntity<ApiResponse<BoardResponseDto>> getBoardById(@PathVariable Long id, HttpServletRequest request) {
+
+        return boardService.getBoardById(id, request);
     }
 
     // 게시글 수정

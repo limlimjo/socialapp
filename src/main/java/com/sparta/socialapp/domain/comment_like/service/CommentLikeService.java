@@ -1,6 +1,7 @@
 package com.sparta.socialapp.domain.comment_like.service;
 
 import com.sparta.socialapp.common.api.ApiResponse;
+import com.sparta.socialapp.common.logger.service.EventLogService;
 import com.sparta.socialapp.domain.comment.entity.Comment;
 import com.sparta.socialapp.domain.comment.repository.CommentRepository;
 import com.sparta.socialapp.domain.comment_like.entity.CommentLike;
@@ -8,6 +9,7 @@ import com.sparta.socialapp.domain.comment_like.repository.CommentLikeRepository
 import com.sparta.socialapp.domain.notification.service.NotificationService;
 import com.sparta.socialapp.domain.user.entity.User;
 import com.sparta.socialapp.domain.user.repository.UserRepository;
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -24,10 +26,11 @@ public class CommentLikeService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final NotificationService notificationService;
+    private final EventLogService eventLogService;
 
     // 댓글 좋아요/좋아요 취소
     @Transactional
-    public ResponseEntity<ApiResponse<String>> toggleCommentLike(Long commentId, Long userId) {
+    public ResponseEntity<ApiResponse<String>> toggleCommentLike(Long commentId, Long userId, HttpServletRequest request) {
         Optional<CommentLike> commentLike = commentLikeRepository.findById(commentId);
 
         if (commentLike.isPresent()) {
@@ -41,6 +44,10 @@ public class CommentLikeService {
                like.setLikeStatus("LIKED");
                like.setUpdatedAt(LocalDateTime.now());
                commentLikeRepository.save(like);
+
+               // wish event log
+               eventLogService.logWishCommentLike(commentId, request);
+
                // 알람 저장
                notificationService.createCommentLikeNotification(commentId, userId);
                return ApiResponse.success("좋아요가 추가되었습니다.");
@@ -59,6 +66,10 @@ public class CommentLikeService {
                     .build();
 
             commentLikeRepository.save(newLike);
+
+            // wish event log
+            eventLogService.logWishCommentLike(commentId, request);
+
             // 알람 저장
             notificationService.createCommentLikeNotification(commentId, userId);
             return ApiResponse.success("좋아요가 추가되었습니다.");
