@@ -50,7 +50,7 @@
 
     <!-- api access 로그 -->
 <!--    <appender name="ACCESS_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">-->
-<!--        <file>logs/user_wish.log</file>-->
+<!--        <file>logs/api_access.log</file>-->
 <!--        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">-->
 <!--            <fileNamePattern>logs/api_access-%d{yyyy-MM-dd}.log</fileNamePattern>-->
 <!--            <maxHistory>30</maxHistory>-->
