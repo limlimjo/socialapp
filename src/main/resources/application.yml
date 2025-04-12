@@ -35,3 +35,10 @@ server:
 springdoc:
   swagger-ui:
     enabled: true
+
+management:
+  metrics:
+    enable:
+      system.cpu.count: false
+      system.load.average.1m: false
+      system.cpu.usage: false

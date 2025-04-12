@@ -22,6 +22,11 @@ services:
       - mysql-data:/var/lib/mysql
     networks:
       - elk
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      retries: 5
+      start_period: 20s
 
   elasticsearch:
     build:
@@ -88,10 +93,25 @@ services:
     depends_on:
       - elasticsearch
 
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    hostname: prometheus
+    restart: always
+    networks:
+      - elk
+
 networks:
   elk:
     driver: bridge
 
 volumes:
   mysql-data:
+    driver: local
+  prometheus_data:
     driver: local

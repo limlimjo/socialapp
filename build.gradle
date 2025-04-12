@@ -30,6 +30,9 @@ dependencies {
 	}
 	implementation 'org.springframework.boot:spring-boot-starter-undertow'
 
+	// mysql
+	implementation 'com.mysql:mysql-connector-j'
+
 	// jpa
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 
@@ -64,11 +67,12 @@ dependencies {
 	// Java 8 Date/Time 지원
 	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
 
+	// prometheus 관련 설정
 //	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+//	implementation 'io.micrometer:micrometer-registry-prometheus'
 
 	compileOnly 'org.projectlombok:lombok'
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	implementation 'com.mysql:mysql-connector-j'
 
 	annotationProcessor 'org.projectlombok:lombok'
 	annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
