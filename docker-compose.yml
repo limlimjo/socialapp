@@ -1,4 +1,28 @@
 services:
+  app:
+    build:
+      dockerfile: Dockerfile
+    container_name: socialapp
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    networks:
+      - elk
+
+  db:
+    image: mysql:8.0
+    container_name: socialapp-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: socialapp_db
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - elk
+
   elasticsearch:
     build:
       context: "./elk/elasticsearch/"
@@ -67,3 +91,7 @@ services:
 networks:
   elk:
     driver: bridge
+
+volumes:
+  mysql-data:
+    driver: local
